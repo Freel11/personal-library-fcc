@@ -7,6 +7,10 @@
 */
 
 'use strict';
+const mongoose = require('mongoose')
+const CommentModel = require('../models.js').Comment
+const BookModel = require('../models.js').Book
+const ObjectId = mongoose.Types.ObjectId
 
 module.exports = function (app) {
 
@@ -17,7 +21,7 @@ module.exports = function (app) {
     })
     
     .post(function (req, res){
-      let title = req.body.title;
+      const title = req.body.title;
       //response will contain new book object including atleast _id and title
     })
     
