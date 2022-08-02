@@ -22,7 +22,26 @@ module.exports = function (app) {
     
     .post(function (req, res){
       const title = req.body.title;
-      //response will contain new book object including atleast _id and title
+      if (!title) {
+        res.send("missing required field title")
+        return
+      }
+
+      const newBook = new BookModel({
+        title
+      })
+
+      newBook.save((err, data) => {
+        if (err || !data) {
+          res.send('There was an error saving this book')
+          return
+        }
+        res.json({
+          title: data.title,
+          _id: data._id
+        }) 
+      })
+
     })
     
     .delete(function(req, res){
