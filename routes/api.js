@@ -16,8 +16,20 @@ module.exports = function (app) {
 
   app.route('/api/books')
     .get(function (req, res){
-      //response will be array of book objects
-      //json res format: [{"_id": bookid, "title": book_title, "commentcount": num_of_comments },...]
+      BookModel.find({}, (err, librarydata) => {
+        if (err) {
+          res.send('There was an error finding all the books')
+          return
+        }
+
+        if (!librarydata) {
+          res.json({})
+          return
+        }
+
+        res.json(librarydata) 
+
+      })
     })
     
     .post(function (req, res){
