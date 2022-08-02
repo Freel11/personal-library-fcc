@@ -56,22 +56,12 @@ module.exports = function (app) {
     })
     
     .delete((req, res) => {
-      BookModel.find({}, (err, librarydata) => {
-        if (err) {
-          res.send('There was an error deleting all the books')
-          return
-        }
-
-        librarydata.remove({}, err => {
-          if (err) {
-            console.log(err)
-            return
-          }
-          res.send('comlete delete successful')
-        })
-      })
-    });
-
+      BookModel.deleteMany({}).then(() => {
+        res.send('comlete delete successful')
+      }).catch((err) => {
+        res.send('There was an error deleting all the books')
+      });
+    })
 
 
   app.route('/api/books/:id')
@@ -143,31 +133,12 @@ module.exports = function (app) {
     .delete(function(req, res){
       const bookid = req.params.id;
 
-      if (!bookid) {
-        res.send('missing required field _id')
-        return
-      }
-
-      BookModel.find({ _id: bookid }, (err, bookdata) => {
-        if (err) {
-          res.send('there was an error deleting this book')
+      BookModel.findByIdAndRemove(bookid, (err, data) => {
+        if (err || !data) {
+          res.send('no book exists')
           return
-        }
-
-        if (!bookdata) {
-          res.send('no book exisis')
-          return
-        }
-
-        bookdata.remove({}, err => {
-          if (err) {
-            console.log(err)
-            return
-          }
-          res.send('delete successful')
-        })
-
-
+        } 
+        res.send('delete successful')
       })
 
     });
