@@ -62,15 +62,13 @@ module.exports = function (app) {
           return
         }
 
-        librarydata.forEach(book => {
-          book.remove({}, err => {
-            if (err) {
-              console.log(err)
-              return
-            }
-          })
+        librarydata.remove({}, err => {
+          if (err) {
+            console.log(err)
+            return
+          }
+          res.send('comlete delete successful')
         })
-        res.send('comlete delete successful')
       })
     });
 
@@ -166,9 +164,9 @@ module.exports = function (app) {
             console.log(err)
             return
           }
+          res.send('delete successful')
         })
 
-        res.send('delete successful')
 
       })
 
