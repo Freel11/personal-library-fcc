@@ -8,7 +8,6 @@
 
 'use strict';
 const mongoose = require('mongoose')
-const CommentModel = require('../models.js').Comment
 const BookModel = require('../models.js').Book
 const ObjectId = mongoose.Types.ObjectId
 
@@ -64,14 +63,68 @@ module.exports = function (app) {
 
   app.route('/api/books/:id')
     .get(function (req, res){
-      let bookid = req.params.id;
-      //json res format: {"_id": bookid, "title": book_title, "comments": [comment,comment,...]}
+      const bookid = req.params.id;
+
+      if (!bookid) {
+        res.send('missing required fields _id')
+        return
+      }
+
+      BookModel.findOne({ _id: bookid }, (err, librarydata) => {
+        if (err) {
+          res.send('There was an issue finding that book')
+          return
+        }
+
+        if (!librarydata) {
+          res.send('no book exists')
+          return
+        }
+
+        res.json(librarydata)
+
+      })
+
     })
     
     .post(function(req, res){
-      let bookid = req.params.id;
-      let comment = req.body.comment;
-      //json res format same as .get
+      const bookid = req.params.id;
+      const comment = req.body.comment;
+      
+      if (!bookid) {
+        res.send('missing required fields _id')
+        return
+      }
+
+      if (!comment) {
+        res.send('missing required fields comment')
+        return
+      }
+
+
+      BookModel.findOne({ _id: bookid }, (err, bookdata) => {
+        if (err) {
+          res.send('there was an error finding this book')
+          return
+        }
+
+        if (!bookdata) {
+          res.send('no book exists')
+          return
+        }
+
+        bookdata.comments.push(comment)
+        bookdata.commentcount++
+
+        bookdata.save((err, data) => {
+          if (err || !data) {
+            res.send('there was an error saving this comment')
+            return
+          }
+          res.json(data)
+        })
+      })
+
     })
     
     .delete(function(req, res){
