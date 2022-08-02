@@ -55,8 +55,23 @@ module.exports = function (app) {
 
     })
     
-    .delete(function(req, res){
-      //if successful response will be 'complete delete successful'
+    .delete((req, res) => {
+      BookModel.find({}, (err, librarydata) => {
+        if (err) {
+          res.send('There was an error deleting all the books')
+          return
+        }
+
+        librarydata.forEach(book => {
+          book.remove({}, err => {
+            if (err) {
+              console.log(err)
+              return
+            }
+          })
+        })
+        res.send('comlete delete successful')
+      })
     });
 
 
@@ -146,17 +161,15 @@ module.exports = function (app) {
           return
         }
 
-        bookdata.remove()
-
-        bookdata.save((err, data) => {
-          if (err || !data) {
-            res.send('there was an error deleting this book')
+        bookdata.remove({}, err => {
+          if (err) {
+            console.log(err)
             return
-          } 
-
-          res.send('delete successful')
-
+          }
         })
+
+        res.send('delete successful')
+
       })
 
     });
