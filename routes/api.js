@@ -128,8 +128,37 @@ module.exports = function (app) {
     })
     
     .delete(function(req, res){
-      let bookid = req.params.id;
-      //if successful response will be 'delete successful'
+      const bookid = req.params.id;
+
+      if (!bookid) {
+        res.send('missing required field _id')
+        return
+      }
+
+      BookModel.find({ _id: bookid }, (err, bookdata) => {
+        if (err) {
+          res.send('there was an error deleting this book')
+          return
+        }
+
+        if (!bookdata) {
+          res.send('no book exisis')
+          return
+        }
+
+        bookdata.remove()
+
+        bookdata.save((err, data) => {
+          if (err || !data) {
+            res.send('there was an error deleting this book')
+            return
+          } 
+
+          res.send('delete successful')
+
+        })
+      })
+
     });
   
 };
