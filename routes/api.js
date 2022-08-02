@@ -57,7 +57,7 @@ module.exports = function (app) {
     
     .delete((req, res) => {
       BookModel.deleteMany({}).then(() => {
-        res.send('comlete delete successful')
+        res.send('complete delete successful')
       }).catch((err) => {
         res.send('There was an error deleting all the books')
       });
