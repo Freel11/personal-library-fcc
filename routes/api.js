@@ -92,12 +92,12 @@ module.exports = function (app) {
       const comment = req.body.comment;
       
       if (!bookid) {
-        res.send('missing required fields _id')
+        res.send('missing required field _id')
         return
       }
 
       if (!comment) {
-        res.send('missing required fields comment')
+        res.send('missing required field comment')
         return
       }
 
